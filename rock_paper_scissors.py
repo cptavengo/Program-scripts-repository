@@ -13,11 +13,11 @@ def rockpaperscissors():
   computer_choice = choice_list[random_number - 1]
   #player input line, and capitalize first letter to compare to choice list
   player_choice = input("Choose rock, paper, or scissors: ")
-  player_choice = player_choice.capitalize()
+  player_choice = player_choice.lower().capitalize()
   #while loop to force player to choose a valid option of the 3 given
   while player_choice not in choice_list:
     player_choice = input("Not a valid option. Please choose rock, paper, or scissors: ")
-    player_choice = player_choice.capitalize()
+    player_choice = player_choice.lower().capitalize()
   #if elif statments for each option in the game results; includes a win counter
   if player_choice == choice_list[0] and computer_choice == choice_list[1]:
     print("Paper beats rock. PC wins!")
