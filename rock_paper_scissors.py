@@ -66,7 +66,7 @@ def rockpaperscissors():
     if len(player_wins) > len(computer_wins):
       print("The player won " + str(len(player_wins)) + " games, while the PC won only " + str(len(computer_wins)) + ".")
     elif len(player_wins) < len(computer_wins):
-      print("The PC won " + str(len(player_wins)) + " games, while you won only " + str(len(computer_wins)) + ".")
+      print("The PC won " + str(len(computer_wins)) + " games, while you won only " + str(len(player_wins)) + ".")
     elif len(player_wins) == len(computer_wins):
       print("You and the PC won the same amount of games: " + str(len(player_wins)) + "!")
   #function call to initiate the program
