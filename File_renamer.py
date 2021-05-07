@@ -3,6 +3,8 @@ import os.path
 import os
 import sys
 import re
+import io
+from PIL import Image
 
 def photo_yes_no():
     layout = [[sg.Text("Would you like to rename photos?")],
@@ -67,17 +69,12 @@ def photo_renamer(file_list, folder):
         ]
     ]
     for f in file_list:
-        if os.path.isfile(os.path.join(folder,f)) == True:
-            regex = r"(\.\w+)$"
-            file_extension = re.search(regex, f)
-            file_extension.groups()
-    fnames = [
-        f
-        for f in file_list
-        if os.path.isfile(os.path.join(folder,f))
-        and f.lower().endswith((".png", ".gif"))
-    ]
-
+        fnames = [
+            f
+            for f in file_list
+            if os.path.isfile(os.path.join(folder,f))
+            and f.lower().endswith((".png", ".jpg", ".jpeg"))
+        ]
     window = sg.Window(" ", layout, finalize=True)
     window["-FILE LIST-"].update(fnames)
 
@@ -90,7 +87,11 @@ def photo_renamer(file_list, folder):
                 filename = os.path.join(
                     folder, values["-FILE LIST-"][0]
                 )
-                window["-IMAGE-"].update(filename=filename)
+                image = Image.open(filename)
+                image.thumbnail((400, 400))
+                bio = io.BytesIO()
+                image.save(bio, format="PNG")
+                window["-IMAGE-"].update(data=bio.getvalue())
             except:
                 pass
         if event == "OK":
@@ -108,7 +109,7 @@ def photo_renamer(file_list, folder):
                         f
                         for f in file_list
                         if os.path.isfile(os.path.join(folder,f))
-                        and f.lower().endswith((".png", ".gif"))
+                        and f.lower().endswith((".png", ".jpg", ".jpeg"))
                         ]
                     window["-FILE LIST-"].update(fnames)
                 else:
@@ -119,7 +120,7 @@ def photo_renamer(file_list, folder):
                         f
                         for f in file_list
                         if os.path.isfile(os.path.join(folder,f))
-                        and f.lower().endswith((".png", ".gif"))
+                        and f.lower().endswith((".png", ".jpg", ".jpeg"))
                         ]
                     window["-FILE LIST-"].update(fnames)
 photo_yes_no()
