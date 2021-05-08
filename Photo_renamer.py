@@ -58,16 +58,73 @@ def photo_folder_selector():
 
     return file_list, folder
 
+def mass_renamer(list_files, folder):
+    layout = [
+    [sg.Text("Input name to be mass labeled:")],
+    [sg.In(enable_events=True, key="-IN-"), sg.Button("OK")],
+    ]
+    window = sg.Window(" ", layout)
+
+    while True:
+        event, values = window.read()
+        if event == "EXIT" or event == sg.WIN_CLOSED:
+            break
+        if event == "OK":
+            if values["-IN-"].isspace() == True or values["-IN-"] == "":
+                sg.popup("The file field cannot be empty", title = " ")
+            if values["-IN-"].find("<") != -1 or values["-IN-"].find(">") != -1 \
+                or values["-IN-"].find(":") != -1 or values["-IN-"].find("\\") != -1 \
+                or values["-IN-"].find("/") != -1 or values["-IN-"].find("\"") != -1 \
+                or values["-IN-"].find("|") != -1 or values["-IN-"].find("?") != -1 \
+                or values["-IN-"].find("*") != -1:
+                sg.popup("The following characters cannot be used:"
+                         "< > : \ / \" | ? * ")
+            else:
+                try:
+                    count = 1
+                    for file in list_files:
+                        regex = r"(\.\w+)$"
+                        file_extension = re.search(regex, file)
+                        file_extension.groups()
+                        if values["-IN-"].endswith(file_extension[0]) == True:
+                            filename = os.path.join(folder + "\\" + file)
+                            new_filename = os.path.join(folder, values["-IN-"] + "(" + str(count) + ")")
+                            os.rename(filename, new_filename)
+                            file_list = os.listdir(folder)
+                            new_fnames = [
+                                f
+                                for f in file_list
+                                if os.path.isfile(os.path.join(folder,f))
+                                and f.lower().endswith((".png", ".jpg", ".jpeg"))
+                            ]
+                        else:
+                            filename = os.path.join(folder + "\\" + file)
+                            new_filename = os.path.join(folder, values["-IN-"] + "(" + str(count) + ")" + file_extension[0])
+                            os.rename(filename, new_filename)
+                            file_list = os.listdir(folder)
+                            new_fnames = [
+                                f
+                                for f in file_list
+                                if os.path.isfile(os.path.join(folder,f))
+                                and f.lower().endswith((".png", ".jpg", ".jpeg"))
+                            ]
+                        count += 1
+                    window.close()
+                    return new_fnames
+                except:
+                    sg.popup("Something screwed up")
+
 def photo_renamer(file_list, folder):
     #This sets up what will be on the left side of the window
     photo_column = [[sg.Text("Select photo to be renamed")],
-              [sg.Listbox(values=file_list, enable_events=True, size=(40,20),
-              key="-FILE LIST-")]]
+              [sg.Listbox(values=file_list, select_mode=sg.LISTBOX_SELECT_MODE_EXTENDED,
+              enable_events=True, size=(40,20),key="-FILE LIST-")]]
     #This sets up what will be on the right side of the window
     viewer_column = [
         [sg.Image(key="-IMAGE-")],
         [sg.Text("New photo name:")],
         [sg.In(key="-INPUT-", do_not_clear=False), sg.Button("OK")],
+        [sg.Button("Mass rename"), sg.Button("Done")],
     ]
     #This sets up the window with a vertical line seperating the two sections
     layout = [
@@ -119,7 +176,7 @@ def photo_renamer(file_list, folder):
                 or values["-INPUT-"].find(":") != -1 or values["-INPUT-"].find("\\") != -1 \
                 or values["-INPUT-"].find("/") != -1 or values["-INPUT-"].find("\"") != -1 \
                 or values["-INPUT-"].find("|") != -1 or values["-INPUT-"].find("?") != -1 \
-                or values["-INPUT-"].find("*") != -1 or values["-INPUT-"].endswith(".CON") == True:
+                or values["-INPUT-"].find("*") != -1:
                 sg.popup("The following characters cannot be used:"
                          "< > : \ / \" | ? * ")
 
@@ -162,6 +219,18 @@ def photo_renamer(file_list, folder):
                         sg.popup("This name is already in use", title = " ")
                     else:
                         sg.popup("Please select a file from the left", title = " ")
+        if event == "Mass rename":
+            list_files = values["-FILE LIST-"]
+            window["-FILE LIST-"].update(mass_renamer(list_files, folder))
+        if event == "Done":
+            print("This function is being added soon.",
+                  "The function may also be disabled in the script")
 
 if __name__ == "__main__":
     main()
+
+##TO DO: add folder splitting capability before file renaming (if needed)
+#mass rename files that follow a pattern
+#add a "Done" button to final window so that function can move on to upload
+#possibly add a file conversion or resizer ability, if desired
+#   ^ this would be good if file sizes need to be reduced to under x MB
