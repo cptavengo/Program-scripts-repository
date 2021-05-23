@@ -12,8 +12,8 @@ def main():
              sg.Checkbox("Yes", key="-YES-"), sg.Checkbox("No", k="-NO-")],
              [sg.Text("Are multiple folders needed for renaming?"),
              sg.Checkbox("Yes", k="-YES_1-"), sg.Checkbox("No", k="-NO_1-")],
-             #[sg.Text("Keep folders after upload?"),
-             #sg.Checkbox("Yes", k="-YES2-"), sg.Checkbox("No", k="-NO2-")],
+             [sg.Text("Is multiple folder move mode needed?"),
+             sg.Checkbox("Yes", k="-YES_2-"), sg.Checkbox("No", k="-NO_2-")],
              [sg.Button("OK")],
              ]
 
@@ -32,8 +32,13 @@ def main():
                     multiple_photo_folders()
 
                 if values["-NO_1-"] == True and values["-YES_1-"] == False:
-                    window.close()
-                    photo_renamer()
+                    if values["-YES_2-"] == False:
+                        window.close()
+                        photo_renamer()
+
+                    else:
+                        window.close()
+                        multiple_photo_folders_mover()
 
                 if values["-NO_1-"] == True and values["-YES_1-"] == True:
                     sg.popup("Please on select yes OR no.")
@@ -357,9 +362,10 @@ def multiple_photo_folders_mover():
             if values["-FOLDER-"] == "" or values["-FOLDER_1-"] == "":
                 sg.popup("Please select a folder before moving photos!")
             else:
-                filename_1 = os.path.join(folder, values["-FILE LIST-"][0])
-                new_filename_1 = os.path.join(folder_1, values["-FILE LIST-"][0])
-                os.replace(filename_1,new_filename_1)
+                for file in values["-FILE LIST-"]:
+                    filename_1 = os.path.join(folder, file)
+                    new_filename_1 = os.path.join(folder_1, file)
+                    os.replace(filename_1,new_filename_1)
 
                 try:
                     folder = values["-FOLDER-"]
