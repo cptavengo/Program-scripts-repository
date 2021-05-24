@@ -5,6 +5,7 @@ import sys
 import re
 import io
 from PIL import Image
+import File_uploader
 
 def main():
     #defines layout for first window of module
@@ -255,8 +256,9 @@ def photo_renamer():
             window["-FILE LIST-"].update(mass_renamer(list_files, folder))
 
         if event == "Done":
-            print("This function is being added soon.",
-                  "The function may also be disabled in the script.")
+            File_uploader.photo_uploader(folder, file_list)
+            #print("This function is being added soon.",
+                  #"The function may also be disabled in the script.")
 
 def multiple_photo_folders_mover():
     file_list_1 = []
@@ -449,5 +451,6 @@ if __name__ == "__main__":
     main()
 
 ##TO DO: add a "Done" button to final window so that function can move on to upload
+#add ability to move other file types, if desired. No photo preview would be available.
 #possibly add a file conversion or resizer ability, if desired
 #   ^ this would be good if file sizes need to be reduced to under x MB
