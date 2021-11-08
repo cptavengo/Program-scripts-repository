@@ -138,7 +138,7 @@ def rockpaperscissorslizardspock():
     if wins[player_wins] > wins[computer_wins]:
       print("The player won " + str(wins[player_wins]) + " games, while the PC won only " + str(wins[computer_wins]) + ".")
     elif wins[player_wins] < wins[computer_wins]:
-      print("The PC won " + str(wins[player_wins]) + " games, while you won only " + str(wins[computer_wins]) + ".")
+      print("The PC won " + str(wins[computer_wins]) + " games, while you won only " + str(wins[player_wins]) + ".")
     elif wins[player_wins] == wins[computer_wins]:
       print("You and the PC won the same amount of games: " + str(wins[player_wins]) + "!")
   #function call to initiate the program
